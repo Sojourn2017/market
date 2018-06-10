@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue-resource-test</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <script src="../node_modules/vue/dist/vue.js"></script>
+    <script src="../node_modules/axios/dist/axios.js"></script>
+</head>
+<body>
+<div id="app" class="container">
+    <h1>vue-resource请求演示</h1>
+    <a href="javascript:;" class="btn btn-primary" @click="sendGet">发送Get请求</a>
+    <a href="javascript:;" class="btn btn-primary" @click="sendPost">发送Post请求</a>
+    <a href="javascript:;" class="btn btn-primary" @click="send">全局函数</a>
+    <div>
+      <span>{{msg}}</span>
+    </div>
+</div>
+<script>
+  new Vue({
+    el: '#app',
+    data:{
+      msg:'hello'
+    },
+    mounted(){
+      axios.interceptors.request.use(config=>{
+          console.log('request init.');
+          return config;
+      });
+      axios.interceptors.response.use(response=>{
+        console.log('response init.');
+        return response;
+      })
+    },
+    methods:{
+      sendGet:function () {
+        axios.get('../package.json',{
+          params:{
+            userId:'get'
+          },
+          headers:{
+            token:'sojourn'
+          }
+        }).then(res=>{
+          this.msg = res.data;
+        }).catch(error=>console.log("error init."+error));
+      },
+      sendPost:function () {
+        axios.post('../package.json',{
+          userId:'123',
+          userName:'sojourn'
+        },{
+          headers:{
+            token:'sojourn1'
+          }
+        }).then(res=>{
+            this.msg = res.data;
+        }).catch(err=>console.log(err));
+      },
+      send:function () {
+        axios({
+          url:'../package.json',
+          method:'post',
+          params:{
+            useId:"1001"
+          },
+          data:{
+            userName:'sojourn',
+            age:'22',
+            sex:'男'
+          },
+          headers:{
+            token:"send"
+          }
+        }).then(res=>{
+          this.msg = res.data;
+        },err => {
+          this.msg = err;
+        });
+      }
+    }
+  })
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+.navbar-left-container>a {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-brand-logo {
+  width: 40px;
+  height: 40px;
+}
+
+.navbar-brand-title {
+  color: #ff3a3a;
+  font-size: 1.8em;
+  font-weight: bold;
+}
+
+.navbar-right-container {
+  display: flex;
+  align-items: center;
+}
+
+
+.navbar-menu-container {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  line-height:30px;
+}
+
+.navbar-cart-container {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+}
