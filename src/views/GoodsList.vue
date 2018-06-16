@@ -50,25 +50,39 @@
       </div>
     </div>
     <div class="md-overlay" v-show="overLayFlag" @click="closePop"></div>
+    <model v-bind:mdShow="mdShow" v-on:close="closeModel">
+      <p slot="message">
+        请先登录，否则无法加入到购物车！
+      </p>
+      <div slot="btnGroup" class="btn-wrap">
+        <a class="btn btn--m" href="javascript:;" @click="mdShow=false">关闭</a>
+      </div>
+    </model>
+    <model v-bind:mdShow="mdShowCart" v-on:close="closeModel">
+      <p slot="message">
+        <svg class="icon-status-ok">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-status-ok"></use>
+        </svg>
+        <span>加入成功！</span>
+      </p>
+      <div slot="btnGroup" class="btn-wrap">
+        <a class="btn btn--m" href="javascript:;" @click="mdShowCart=false">继续购物</a>
+        <a class="btn btn--m" href="/#/cart">去结算</a>
+      </div>
+    </model>
     <nav-footer></nav-footer>
   </div>
 </template>
-
-<style>
-.load-more {
-  height: 100px;
-  font-weight: 100px;
-  text-align: center;
-}
-</style>
 
 <script>
 import './../assets/css/base.css'
 import './../assets/css/product.css'
 import './../assets/css/supply.css'
+import './../assets/css/login.css';
 import NavHeader from './../components/Navheader.vue'
 import NavFooter from './../components/NavFooter.vue'
 import NavBread from './../components/NavBread.vue'
+import Model from './../components/Model.vue'
 import axios from 'axios'
 export default {
   data () {
@@ -81,6 +95,8 @@ export default {
       page:1,
       pageSize:8,
       busy:true,
+      mdShow:false,
+      mdShowCart:false,
       loadMoreFlag:false,
       priceLevel:'all',
       priceFilter: [
@@ -106,7 +122,8 @@ export default {
   components: {
     NavHeader,
     NavFooter,
-    NavBread
+    NavBread,
+    Model
   },
   mounted () {
     this.getGoodsList();
@@ -120,7 +137,7 @@ export default {
         priceLevel: this.priceLevel
       }
       this.loadMoreFlag = true;
-      axios.get('/goods',{params:param}).then((result)=>{
+      axios.get('/goods/list',{params:param}).then((result)=>{
         let res = result.data;
         if (res.status = '0') {
           if (flag) {
@@ -177,14 +194,18 @@ export default {
     addCart (productId) {
       axios.post("/goods/addCart",{
         productId: productId
-      }).then((res)=>{
-        if (res.status = '0') {
-          alert("加入成功");
-          console.log(res);
+      }).then((response)=>{
+        let res = response.data
+        if (res.status == '0') {
+          this.mdShowCart = true;
         } else {
-          alert("msg:"+res.data.msg);
+          this.mdShow = true;
         }
       })
+    },
+    closeModel () {
+      this.mdShow = false;
+      this.mdShowCart = false;
     }
   }
 }

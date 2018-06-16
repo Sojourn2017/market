@@ -1,6 +1,11 @@
 <template>
   <header class="header">
         <div class="navbar">
+          <symbol id="icon-status-ok" viewBox="0 0 32 32">
+            <title>status-ok</title>
+            <path class="path1" d="M22.361 10.903l-9.71 9.063-2.998-2.998c-0.208-0.209-0.546-0.209-0.754 0s-0.208 0.546 0 0.754l3.363 3.363c0.104 0.104 0.241 0.156 0.377 0.156 0.131 0 0.261-0.048 0.364-0.143l10.087-9.414c0.215-0.201 0.227-0.539 0.026-0.754s-0.539-0.226-0.754-0.026z"></path>
+            <path class="path2" d="M16 30.933c-8.234 0-14.933-6.699-14.933-14.933s6.699-14.933 14.933-14.933c8.234 0 14.933 6.699 14.933 14.933s-6.699 14.933-14.933 14.933zM16 0c-8.822 0-16 7.178-16 16 0 8.823 7.178 16 16 16s16-7.177 16-16c0-8.822-7.178-16-16-16z"></path>
+          </symbol>
           <div class="navbar-left-container">
             <a href="/">
               <img class="navbar-brand-logo" src="static/img/logo.png">
@@ -10,9 +15,9 @@
           <div class="navbar-right-container">
             <div class="navbar-menu-container">
               <!-- <a href="/" class="navbar-link">我的账户</a> -->
-              <span class="navbar-link"></span>
-              <a href="javascript:void(0)" class="navbar-link">登录</a>&nbsp;/&nbsp;
-              <a href="javascript:void(0)" class="navbar-link">注销</a>
+              <span class="navbar-link font-red" v-if="nickName" v-text="nickName"></span>
+              <a href="javascript:void(0)" class="navbar-link" @click="loginModalFlag=true" v-if="!nickName">登录</a>
+              <a href="javascript:void(0)" class="navbar-link" v-if="nickName" v-on:click="logOut">注销</a>
               <div class="navbar-cart-container ">
                 <span class="navbar-cart-count"></span>
                 <a class="navbar-link navbar-cart-link" href="/#/cart">
@@ -22,5 +27,117 @@
             </div>
           </div>
         </div>
+        <div class="md-modal modal-msg md-modal-transition" v-bind:class="{'md-show':loginModalFlag}">
+          <div class="md-modal-inner">
+            <div class="md-top">
+              <div class="md-title">登录</div>
+              <button class="md-close" @click="loginModalFlag=false">Close</button>
+            </div>
+            <div class="md-content">
+              <div class="confirm-tips">
+                <div class="error-wrap">
+                  <span class="error error-show" v-show="errorTip">用户名或者密码错误</span>
+                </div>
+                <ul>
+                  <li class="regi_form_input">
+                    <i class="icon IconPeople"></i>
+                    <input type="text" tabindex="1" name="loginname" v-model="userName" class="regi_login_input regi_login_input_left" placeholder="请输入用户名" data-type="loginname">
+                  </li>
+                  <li class="regi_form_input noMargin">
+                    <i class="icon IconPwd"></i>
+                    <input type="password" tabindex="2"  name="password" v-model="userPwd" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="请输入密码" @keyup.enter="login">
+                  </li>
+                </ul>
+              </div>
+              <div class="login-wrap">
+                <a href="javascript:;" class="btn-login" @click="login">登  录</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="md-overlay" v-if="loginModalFlag" @click="loginModalFlag=false"></div>
       </header>
 </template>
+
+<script>
+  import './../assets/css/login.css';
+  import axios from 'axios'
+  import { mapState } from 'vuex'
+  export default{
+      data(){
+          return{
+            userName:'',
+            userPwd:'',
+            errorTip:false,
+            loginModalFlag:false,
+            nickName:'',
+          }
+      },
+      computed:{
+        // ...mapState(['nickName','cartCount'])
+      },
+      /*nickName(){
+        return this.$store.state.nickName;
+      },
+      cartCount(){
+        return this.$store.state.cartCount;
+      }*/
+      mounted(){
+          this.checkLogin();
+      },
+      methods:{
+          checkLogin(){
+              axios.get("/users/checkLogin").then((response)=>{
+                  var res = response.data;
+                  // var path = this.$route.pathname;
+                  if(res.status=="0"){
+                    this.nickName = res.result;
+                    // this.$store.commit("updateUserInfo",res.result);
+                    this.loginModalFlag = false;
+                  }else{
+                    // if(this.$route.path!="/goods"){
+                    //   this.$router.push("/goods");
+                    // }
+                  }
+              });
+          },
+          login(){
+              if(!this.userName || !this.userPwd){
+                this.errorTip = true;
+                return;
+              }
+              axios.post("/users/login",{
+                userName:this.userName,
+                userPwd:this.userPwd
+              }).then((response)=>{
+                  let res = response.data;
+                  if(res.status=="0"){
+                    this.errorTip = false;
+                    this.loginModalFlag = false;
+                    this.nickName = res.result.userName;
+                    // this.$store.commit("updateUserInfo",res.result.userName);
+                    // this.getCartCount();
+                  }else{
+                    this.errorTip = true;
+                  }
+              });
+          },
+          logOut(){
+              axios.post("/users/logout").then((response)=>{
+                  let res = response.data;
+                  if (res.status=="0") {
+                      this.nickName = '';
+                      // this.$store.commit("updateUserInfo",res.result.userName);
+                  }
+              })
+          },
+          getCartCount(){
+            axios.get("users/getCartCount").then(res=>{
+              var res = res.data;
+              // this.$store.commit("updateCartCount",res.result);
+            });
+          }
+      }
+  }
+</script>
+

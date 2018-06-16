@@ -827,11 +827,11 @@ a:hover {
   margin-top: 0!important;
 }
 
-/*.btn:hover, .btn[href]:hover {
+.btn:hover, .btn[href]:hover {
   background-color: #ffe5e6;
   -webkit-transition: all .3s ease-out;
   transition: all .3s ease-out;
-}*/
+}
 
 .btn--orange, .btn--orange[href] {
   background-color: #ee7a23;
