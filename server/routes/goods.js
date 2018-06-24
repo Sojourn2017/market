@@ -19,6 +19,7 @@ mongoose.connection.on('disconnected',function () {
   console.log('mongodb connected disconnected');
 })
 
+// 获取商品列表接口
 router.get("/list", function(req, res, next) {
   let page = parseInt(req.param('page'));
   let pageSize = parseInt(req.param('pageSize'));
@@ -75,6 +76,7 @@ router.get("/list", function(req, res, next) {
   })
 });
 
+// 添加进购物车接口
 router.post("/addCart",function (req, res, next) {
   let userId = '123456';
   let productId = req.body.productId;

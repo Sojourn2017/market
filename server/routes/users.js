@@ -7,6 +7,7 @@ router.get('/', function (req, res, next) {
   res.send('respond with a resource');
 });
 
+// 用户登录
 router.post('/login',function (req,res,next) {
   let params = {
     userName: req.body.userName,
@@ -41,6 +42,7 @@ router.post('/login',function (req,res,next) {
   })
 });
 
+// 注销用户登录
 router.post('/logout',function (req,res,next) {
   res.cookie('userId','',{
     path: '/',
@@ -54,6 +56,7 @@ router.post('/logout',function (req,res,next) {
   })
 });
 
+// 检测用户是否登录
 router.get('/checkLogin',function (req,res,next) {
   if (req.cookies.userId) {
     res.json({
@@ -69,4 +72,5 @@ router.get('/checkLogin',function (req,res,next) {
     })
   }
 })
+
 module.exports = router;

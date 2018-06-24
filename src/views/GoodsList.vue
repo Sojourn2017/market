@@ -50,7 +50,7 @@
       </div>
     </div>
     <div class="md-overlay" v-show="overLayFlag" @click="closePop"></div>
-    <model v-bind:mdShow="mdShow" v-on:close="closeModel">
+    <model v-bind:mdShow="mdShowLogin" v-on:close="closeModel">
       <p slot="message">
         请先登录，否则无法加入到购物车！
       </p>
@@ -87,19 +87,19 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      goodsList:[],
-      priceChecked:'all',
-      filterBy:false,
-      overLayFlag:false,
-      sortFlag:true,
-      page:1,
-      pageSize:8,
-      busy:true,
-      mdShow:false,
-      mdShowCart:false,
-      loadMoreFlag:false,
-      priceLevel:'all',
-      priceFilter: [
+      goodsList:[],   // 商品列表
+      priceChecked:'all',   // 选择所有价格范围的商品
+      priceLevel:'all',     // 商品价格区间选择
+      filterBy:false,       // 价格筛选
+      overLayFlag:false,    // 窄宽价格筛选抽屉遮罩
+      sortFlag:true,        // 价格升降序排列
+      page:1,               // 请求商品的页数
+      pageSize:8,           // 每页请求商品的数量
+      mdShowLogin:false,    // 检测登录模态框
+      mdShowCart:false,     // 成功加入购物车模态框
+      busy:true,            // 显示正在加载商品列表标志
+      loadMoreFlag:false,   // 无限滚动标志
+      priceFilter: [        // 价格筛选区间
         {
           startPrice:0,
           endPrice:500
@@ -129,6 +129,7 @@ export default {
     this.getGoodsList();
   },
   methods:{
+    // 获取商品列表
     getGoodsList (flag) {
       let param = {
         page: this.page,
@@ -158,15 +159,30 @@ export default {
         
       })
     },
+
+    // 按价格排列商品
     sortGoodsList (flag) {
       this.sortFlag = flag;
       this.page = 1;
       this.getGoodsList();
     },
+
+    // 显示筛选框（窄宽有效）
     showFilterPop () {
       this.filterBy = true;
       this.overLayFlag = true;
     },
+
+    // 设置选中所有价格
+    chooseAll () {
+      this.priceChecked='all';
+      this.priceLevel='all';
+      this.closePop();
+      this.page=1;
+      this.getGoodsList();
+    },
+
+    // 设置价格筛选
     setPriceFilter (index) {
       this.priceChecked=index;
       this.closePop();
@@ -174,10 +190,14 @@ export default {
       this.priceLevel = index;
       this.getGoodsList();
     },
+
+    // 关闭价格筛选框
     closePop () {
       this.filterBy = false;
       this.overLayFlag = false;
     },
+
+    // 加载更多商品
     loadMore () {
       this.busy = true;
       setTimeout(() => {
@@ -185,12 +205,8 @@ export default {
         this.getGoodsList(true);
       }, 500);
     },
-    chooseAll () {
-      this.priceChecked='all';
-      this.priceLevel='all';
-      this.page=1;
-      this.getGoodsList();
-    },
+
+    // 加入购物车
     addCart (productId) {
       axios.post("/goods/addCart",{
         productId: productId
@@ -199,12 +215,14 @@ export default {
         if (res.status == '0') {
           this.mdShowCart = true;
         } else {
-          this.mdShow = true;
+          this.mdShowLogin = true;
         }
       })
     },
+
+    // 关闭模态框
     closeModel () {
-      this.mdShow = false;
+      this.mdShowLogin = false;
       this.mdShowCart = false;
     }
   }
