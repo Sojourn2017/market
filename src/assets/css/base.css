@@ -946,26 +946,47 @@ a:hover {
   display: inline-block;
 }
 
+.item-quantity .select-self-area{
+  background:none;
+  border: 1px solid #f0f0f0;
+}
+
 .select-self-area {
   width: auto;
   background: #f0f0f0;
   border-radius: 3px;
-  min-width: 50px;
+  min-width: 80px;
   max-width: 240px;
   height: 30px;
   line-height: 30px;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .select-self-area .select-ipt {
-  display: block;
-  min-width: 56px;
+  display: inline-block;
+  width: 30px;
+  min-width: 30px;
   height: 100%;
-  padding: 0 25px 0 10px;
+  padding:0 3px;
   border: 0;
+  background-color: #fff;
   color: #605F5F;
-  text-align: left;
+  text-align: center;
   font-size: 16px;
   overflow: hidden;
+}
+
+.select-self-area .input-sub, .select-self-area .input-add {
+  display: inline-block;
+  min-width: 40px;
+  height: 100%;
+  border: 0;
+  color: #605F5F;
+  text-align: center;
+  font-size: 16px;
+  overflow: hidden;
+  background: #f0f0f0;
 }
 
 .select-self-area .select-btn {

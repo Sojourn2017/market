@@ -41,11 +41,11 @@
                 <ul>
                   <li class="regi_form_input">
                     <i class="icon IconPeople"></i>
-                    <input type="text" tabindex="1" name="loginname" v-model="userName" class="regi_login_input regi_login_input_left" placeholder="请输入用户名" data-type="loginname">
+                    <input type="text" tabindex="1" name="loginname" v-model="userName" class="regi_login_input regi_login_input_left" placeholder="测试用户名：test" data-type="loginname" value="test">
                   </li>
                   <li class="regi_form_input noMargin">
                     <i class="icon IconPwd"></i>
-                    <input type="password" tabindex="2"  name="password" v-model="userPwd" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="请输入密码" @keyup.enter="login">
+                    <input type="password" tabindex="2"  name="password" v-model="userPwd" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="测试密码：123456" @keyup.enter="login" value="123456">
                   </li>
                 </ul>
               </div>
@@ -132,7 +132,7 @@
               })
           },
           getCartCount(){
-            axios.get("users/getCartCount").then(res=>{
+            axios.get("users/getCartCount").then((response) => {
               var res = res.data;
               // this.$store.commit("updateCartCount",res.result);
             });

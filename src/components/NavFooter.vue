@@ -4,17 +4,17 @@
         <div class="footer__secondary">
           <div class="footer__inner">
             <div class="footer__region">
-              <span>地区：China</span>
+              <span>地区：中国</span>
             </div>
             <div class="footer__secondary__nav">
               <span>Copyright © 2018 Sojourn</span>
-              <a href="http://us.lemall.com/us/aboutUs.html">
+              <a href="##">
                 关于我们
               </a>
-              <a href="http://us.lemall.com/us/termsofUse.html">
+              <a href="##">
                 相关条款
               </a>
-              <a href="http://us.lemall.com/us/privacyPolicy.html">
+              <a href="##">
                 隐私政策
               </a>
             </div>

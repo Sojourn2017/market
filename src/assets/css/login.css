@@ -66,6 +66,7 @@ a {
 }
 .regi_form_input{
   position: relative;
+  min-width: 280px;
   height: 42px;
   line-height: 42px;
   background: none;
@@ -143,6 +144,8 @@ a {
   visibility: visible;
   height: auto;
 }
+
+
 
 .font-red {
   color: #ff3a3a;

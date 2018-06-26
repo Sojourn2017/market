@@ -2,7 +2,7 @@
   <div>
     <nav-header></nav-header>
     <nav-bread>
-      <span slot="bread">Goods</span>
+      <span slot="bread">商品</span>
     </nav-bread>
     <div class="accessory-result-page accessory-page">
       <div class="container">
@@ -55,7 +55,7 @@
         请先登录，否则无法加入到购物车！
       </p>
       <div slot="btnGroup" class="btn-wrap">
-        <a class="btn btn--m" href="javascript:;" @click="mdShow=false">关闭</a>
+        <a class="btn btn--m" href="javascript:;" @click="mdShowLogin=false">关闭</a>
       </div>
     </model>
     <model v-bind:mdShow="mdShowCart" v-on:close="closeModel">
@@ -138,8 +138,8 @@ export default {
         priceLevel: this.priceLevel
       }
       this.loadMoreFlag = true;
-      axios.get('/goods/list',{params:param}).then((result)=>{
-        let res = result.data;
+      axios.get('/goods/list',{params:param}).then((response)=>{
+        let res = response.data;
         if (res.status = '0') {
           if (flag) {
             this.goodsList = this.goodsList.concat(res.result.list);
@@ -210,7 +210,7 @@ export default {
     addCart (productId) {
       axios.post("/goods/addCart",{
         productId: productId
-      }).then((response)=>{
+      }).then((response) => {
         let res = response.data
         if (res.status == '0') {
           this.mdShowCart = true;
