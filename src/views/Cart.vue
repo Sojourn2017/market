@@ -89,7 +89,7 @@
           <div class="cart-foot-inner">
             <div class="cart-foot-l">
               <div class="item-all-check">
-                <a href="javascipt:;"v-on:click="selectAll()">
+                <a href="javascipt:;" v-on:click="selectAll()">
                       <span class="checkbox-btn item-check-btn" v-bind:class="{'check':selectAllFlag}" >
                           <svg class="icon icon-ok"><use xlink:href="#icon-ok"/></svg>
                       </span>
@@ -99,10 +99,10 @@
             </div>
             <div class="cart-foot-r">
               <div class="item-total">
-                合计: <span class="total-price">500</span>
+                合计: <span class="total-price">{{totalPrice}}</span>
               </div>
               <div class="btn-wrap">
-                <a class="btn btn--red">去结算</a>
+                <a class="btn btn--red" href="/#/trade">去结算</a>
               </div>
             </div>
           </div>
@@ -142,21 +142,29 @@ export default {
     return {
       mdShowDel:false,    // 模态框状态
       productDelId:"",    // 欲删除的商品ID
-      cartList:[]         // 购物车列表
+      cartList:[]    // 购物车列表
     } ; 
   },
   computed:{
-    selectAllFlag() {
+    selectAllFlag() {    //全选信号
       return this.cartList.length == this.checkedCount;
     },
-    checkedCount() {
+    checkedCount() {    //选中商品的数量
       let count = 0;
       this.cartList.forEach((item) => {
         if (item.checked) {count++};
       })
       return count;
+    },
+    totalPrice() {    // 实时计算总价
+      let money = 0;
+      this.cartList.forEach((item)=>{
+        if (item.checked) {
+          money += item.productNum * item.salePrice;
+        }
+      });
+      return money;
     }
-
   },
   mounted() {
     this.init();  // 初始化
