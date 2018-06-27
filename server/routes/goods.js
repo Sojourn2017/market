@@ -78,7 +78,7 @@ router.get("/list", function(req, res, next) {
 
 // 添加进购物车接口
 router.post("/addCart",function (req, res, next) {
-  let userId = '123456';
+  let userId = req.cookies.userId;
   let productId = req.body.productId;
   User.findOne({userId:userId},function (err,userDoc) {
     if (err) {

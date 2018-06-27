@@ -8,13 +8,13 @@
             </div>
             <div class="footer__secondary__nav">
               <span>Copyright © 2018 Sojourn</span>
-              <a href="##">
+              <a href="javascript:void(0)">
                 关于我们
               </a>
-              <a href="##">
+              <a href="javascript:void(0)">
                 相关条款
               </a>
-              <a href="##">
+              <a href="javascript:void(0)">
                 隐私政策
               </a>
             </div>

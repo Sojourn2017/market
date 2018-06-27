@@ -53,6 +53,10 @@ router.post('/logout',function (req,res,next) {
     path: '/',
     maxAge: null
   });
+  res.cookie('userName','',{
+    path: '/',
+    maxAge: null
+  });
 
   res.json({
     status: "0",
@@ -108,8 +112,8 @@ router.get("/cartList",function (req,res,next) {
 
 // 删除指定商品
 router.post("/productDel",function (req,res,next) {
-  let userId = req.cookies.userId;
-  let productDelId = req.body.productId;
+  let [userId, productDelId] = [req.cookies.userId, req.body.productId];
+  console.log()
   User.update({
     "userId":userId
   },{
@@ -186,7 +190,109 @@ router.post("/selectAll", function (req, res, next) {
       })
     }
   })
+});
 
+// 获取收货地址
+router.get("/addressList",function(req,res,next) {
+  let userId = req.cookies.userId;
+  User.findOne({userId:userId},function(err,doc) {
+    if (err) {
+      res.json({
+        status:'1',
+        msg:err.message,
+        result:""
+      })
+    } else {
+      if (doc.addressList.length > 0) {
+        res.json({
+          status:"0",
+          msg:"",
+          result:doc.addressList
+        })
+      } else {
+        res.json({
+          status:"1001",
+          msg:"no address",
+          result:""
+        })
+      }
+    }
+  })
+})
+
+// 设置默认地址
+router.post("/setDefault", function(req,res,next) {
+  let [userId,addressId] = [req.cookies.userId,req.body.addressId];
+  if (!addressId) {
+    res.json({
+      status:"1003",
+      msg: "addressId is null",
+      result: ""
+    })
+  } else {
+    User.findOne({userId:userId},function (err,doc) {
+      if (err) {
+        res.json({
+          status:'1',
+          msg:err.message,
+          result:""
+        })
+      } else {
+        let addressList = doc.addressList;
+        addressList.forEach((item) => {
+          if (item.addressId == addressId) {
+            item.isDefault = true;
+          } else {
+            item.isDefault = false;
+          }
+        });
+        doc.save(function(err,doc) {
+          if (err) {
+            res.json({
+              status:'1',
+              msg:err.message,
+              result:""
+            });
+          } else {
+            res.json({
+              status:"0",
+              msg:"",
+              result:""
+            })
+          }
+        })
+      }
+    })
+  }
+})
+
+// 删除指定地址
+router.post("/addressDel",function (req,res,next) {
+  let [userId, addressDelId] = [req.cookies.userId, req.body.addressId];
+  console.log()
+  User.update({
+    userId:userId
+  },{
+    $pull:{
+      addressList:{
+        addressId:addressDelId
+      }
+    }
+  },function (err,doc) {
+    if (err) {
+      res.json ({
+        status:"1",
+        msg:err.message,
+        result:""
+      })
+    } else {
+      res.json ({
+        status:"0",
+        msg:"delete success",
+        result:""
+      })
+    }
+  });
 });
 
 module.exports = router;

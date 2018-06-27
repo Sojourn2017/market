@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 网页头部 -->
-    <nav-header></nav-header>
+    <nav-header  v-on:overLoad="init"></nav-header>
 
     <!-- 网页面包屑 -->
     <nav-bread>
@@ -102,7 +102,7 @@
                 合计: <span class="total-price">{{(totalPrice) | currency('￥')}}</span>
               </div>
               <div class="btn-wrap">
-                <a class="btn btn--red" href="/#/trade">去结算</a>
+                <a class="btn btn--red" v-bind:class="{'btn--dis':checkedCount == 0}" v-on:click="checkOut">去结算</a>
               </div>
             </div>
           </div>
@@ -111,14 +111,14 @@
     </div>
 
     <!-- 删除商品确认模态框 -->
-    <model v-bind:mdShow="mdShowDel" v-on:close="closeModel">
+    <modal v-bind:mdShow="mdShowDel" v-on:close="closeModel">
       <p slot="message">确定要删除吗？
       </p>
       <div slot="btnGroup" class="btn-wrap">
-        <a class="btn btn--m" href="javascript:;" v-on:click="productDel()">确定</a>
-        <a class="btn btn--m" href="javascript:;">取消</a>
+        <a class="btn btn--m" href="javascript:;" v-on:click="productDel">确定</a>
+        <a class="btn btn--m" href="javascript:;" v-on:click="closeModel">取消</a>
       </div>
-    </model>
+    </modal>
 
     <!-- 网页底部 -->
     <nav-footer></nav-footer>
@@ -133,7 +133,7 @@ import './../assets/css/login.css';
 import NavHeader from './../components/Navheader.vue'
 import NavFooter from './../components/NavFooter.vue'
 import NavBread from './../components/NavBread.vue'
-import Model from './../components/Model.vue'
+import Modal from './../components/Modal.vue'
 import SvgModel from './../components/SvgModel.vue'
 import axios from 'axios'
 
@@ -145,6 +145,7 @@ export default {
       cartList:[]    // 购物车列表
     } ; 
   },
+
   computed:{
     selectAllFlag() {    //全选信号
       return this.cartList.length == this.checkedCount;
@@ -164,22 +165,25 @@ export default {
         }
       });
       return money;
-    }
+    },
   },
+
   mounted() {
     this.init();  // 初始化
   },
+
   components: {
     NavHeader,
     NavFooter,
     NavBread,
-    Model,
+    Modal,
     SvgModel
   },
+
   methods: {
-    // 初始化函数
+    // 页面初始化函数
     init() {
-      axios.get("./users/cartList").then((response)=>{
+      axios.get("/users/cartList").then((response)=>{
         let res = response.data;
         if (res.status == "0") {
           this.cartList = res.result;
@@ -197,14 +201,14 @@ export default {
 
     // 删除指定商品
     productDel() {
-      axios.post("./users/productDel",{productId:this.productDelId}).then((response)=>{
+      axios.post("/users/productDel",{productId:this.productDelId}).then((response)=>{
         let res = response.data;
         if (res.status == "0") {
           this.mdShowDel = false;
           this.updateCartList(this.productDelId);
           this.productDelId = "";
         } else {
-          // 删除失败
+          console.error("删除失败");
         }
       })
     },
@@ -218,7 +222,6 @@ export default {
           return;
         }
       }
-      this.cartList = cartList;
     },
 
     // 关闭模态框
@@ -245,7 +248,7 @@ export default {
       }
 
       // 向后台发送更改的数据
-      axios.post("./users/editCart",{
+      axios.post("/users/editCart",{
         productId:item.productId,
         productNum:item.productNum,
         checked:item.checked
@@ -263,10 +266,19 @@ export default {
       });
 
       // 向后台发送全选信号
-      axios.post("./users/selectAll",{selectAllFlag:flag}).then((response) => {
+      axios.post("/users/selectAll",{selectAllFlag:flag}).then((response) => {
         let res = response.data;
         // 响应处理
       });
+    },
+
+    // 判断是否可以跳转结算
+    checkOut() {    
+      if(this.checkedCount > 0) {
+        this.$router.push({
+          path:'/address'
+        })
+      }
     }
   }
 }

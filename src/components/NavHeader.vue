@@ -39,14 +39,16 @@
                   <span class="error error-show" v-show="errorTip">用户名或者密码错误</span>
                 </div>
                 <ul>
-                  <li class="regi_form_input">
-                    <i class="icon IconPeople"></i>
-                    <input type="text" tabindex="1" name="loginname" v-model="userName" class="regi_login_input regi_login_input_left" placeholder="测试用户名：test" data-type="loginname" value="test">
-                  </li>
-                  <li class="regi_form_input noMargin">
-                    <i class="icon IconPwd"></i>
-                    <input type="password" tabindex="2"  name="password" v-model="userPwd" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="测试密码：123456" @keyup.enter="login" value="123456">
-                  </li>
+                  <form>
+                    <li class="regi_form_input">
+                      <i class="icon IconPeople"></i>
+                      <input type="text" tabindex="1" autocomplete="username" name="loginname" v-model="userName" class="regi_login_input regi_login_input_left" placeholder="测试用户名：test" data-type="loginname" value="test">
+                    </li>
+                    <li class="regi_form_input noMargin">
+                      <i class="icon IconPwd"></i>
+                      <input type="password" tabindex="2" autocomplete="current-password" name="password" v-model="userPwd" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="测试密码：123456" @keyup.enter="login" value="123456">
+                    </li>
+                  </form>
                 </ul>
               </div>
               <div class="login-wrap">
@@ -112,6 +114,7 @@
               }).then((response)=>{
                   let res = response.data;
                   if(res.status=="0"){
+                    this.overLoad();
                     this.errorTip = false;
                     this.loginModalFlag = false;
                     this.nickName = res.result.userName;
@@ -126,6 +129,7 @@
               axios.post("/users/logout").then((response)=>{
                   let res = response.data;
                   if (res.status=="0") {
+                      this.overLoad();
                       this.nickName = '';
                       // this.$store.commit("updateUserInfo",res.result.userName);
                   }
@@ -136,6 +140,9 @@
               var res = res.data;
               // this.$store.commit("updateCartCount",res.result);
             });
+          },
+          overLoad() {
+            this.$emit('overLoad')
           }
       }
   }

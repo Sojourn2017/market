@@ -12,7 +12,7 @@
             </div>
           </div>
         </div>
-        <div class="md-overlay" v-if="mdShow" @click="closeMoel"></div>
+        <div class="md-overlay" v-if="mdShow" @click="closeModal"></div>
   </div>
 </template>
 <script>
@@ -23,7 +23,7 @@ export default {
     } ; 
   },
   methods: {
-    closeMoel () {
+    closeModal () {
       this.$emit("close");
     }
   }

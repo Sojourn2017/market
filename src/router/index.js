@@ -2,7 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import GoodsList from './../views/GoodsList'
 import Cart from '@/views/Cart'
+import Address from '@/views/Address'
 import Trade from "@/views/Trade"
+import orderConfirm from "@/views/orderConfirm"
 
 Vue.use(Router)
 
@@ -24,9 +26,19 @@ export default new Router({
       component:Cart
     },
     {
+      path:'/address',
+      name:'Address',
+      component:Address
+    },
+    {
       path:'/trade',
       name:'Trade',
       component:Trade
+    },
+    {
+      path:'/orderConfirm',
+      name:'orderConfirm',
+      component:orderConfirm
     }
   ]
 })
