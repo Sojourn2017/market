@@ -3,11 +3,6 @@
   <!-- 网页头部 -->
   <nav-header  v-on:overLoad="init"></nav-header>
 
-  <!-- 网页面包屑 -->
-  <nav-bread>
-    <span slot="bread">地址</span>
-  </nav-bread>
-
   <!-- svg图标库 -->
   <svg-model></svg-model>
 
@@ -16,7 +11,7 @@
     <div class="container">
       <div class="checkout-order">
         <div class="page-title-normal">
-          <h2 class="page-title-h2"><span>check out</span></h2>
+          <h2 class="page-title-h2"><span>购物流程</span></h2>
         </div>
         <!-- 购物流程-->
         <div class="check-step">
@@ -92,7 +87,7 @@
               </li>
               <li class="order-total-price">
                 <span>实付款:</span>
-                <span>{{(realPay) | currency('￥')}}</span>
+                <span>{{(totalPay) | currency('￥')}}</span>
               </li>
             </ul>
           </div>
@@ -100,10 +95,10 @@
 
         <div class="order-foot-wrap">
           <div class="prev-btn-wrap">
-            <button class="btn btn--m">上一步</button>
+            <router-link class="btn btn--m" to="/address">上一步</router-link>
           </div>
           <div class="next-btn-wrap">
-            <button class="btn btn--m btn--red">提交订单</button>
+            <button class="btn btn--m btn--red" v-on:click="submitOrder">提交订单</button>
           </div>
         </div>
       </div>
@@ -136,6 +131,8 @@ export default {
       orderList:[],   // 订单列表
       orderShipping:100,    // 运费
       orderDiscount:0,    // 折扣
+      totalPrice:0,   // 商品总金额
+      totalPay:0,    // 实际支付金额
     } ; 
   },
 
@@ -148,18 +145,6 @@ export default {
   },
 
   computed:{
-    totalPrice() {    // 商品总金额
-      let price = 0;
-      this.orderList.forEach((item)=>{
-          price += item.productNum * item.salePrice;
-      });
-      return price;
-    },
-
-    realPay() {   // 实际支付金额
-      let money = this.totalPrice + this.orderShipping - this.orderDiscount
-      return money > 0 ? money : 0;
-    }
   },
 
   mounted() {
@@ -173,6 +158,31 @@ export default {
         let res = response.data;
         if (res.status == "0") {
           this.orderList = res.result;
+          this.orderList.forEach((item)=>{
+            this.totalPrice += item.productNum * item.salePrice;
+          });
+          this.totalPay = this.totalPrice + this.orderShipping - this.orderDiscount > 0
+            ? this.totalPrice + this.orderShipping - this.orderDiscount
+            : 0;
+        }
+      })
+    },
+
+    // 提交订单
+    submitOrder() {
+      let addressId = this.$route.query.addressId;
+      axios.post("/users/payMent",{
+        addressId:addressId,
+        totalPay:this.totalPay
+      }).then((response) => {
+        let res = response.data;
+        if (res.status == "0") {
+          this.$router.push({
+          path:'/orderSuccess',
+          query:{
+            address:res.result.orderId
+          }
+        })
         }
       })
     }

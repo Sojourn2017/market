@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 let User = require("./../models/user");
+require("./../util/util");
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -295,7 +296,7 @@ router.post("/addressDel",function (req,res,next) {
 });
 
 // 获取订单列表
-router.get("/orderList",function(req,res,netx) {
+router.get("/orderList",function(req,res,next) {
   let userId = req.cookies.userId;
   User.findOne({userId:userId},function(err,doc) {
     if (err) {
@@ -324,6 +325,85 @@ router.get("/orderList",function(req,res,netx) {
           msg:"no cartList",
           result:"",
         });
+      }
+    }
+  })
+})
+
+// 订单完成页面
+router.post("/payMent",function(req,res,next) {
+  let [userId,addressId,totalPay] = [req.cookies.userId,req.body.addressId,req.body.totalPay];
+  User.findOne({userId:userId},function(err,doc) {
+    if (err) {
+      res.json({
+        status:"1",
+        msg:err.message,
+        result:""
+      })
+    } else {
+      if(doc) {
+        let address = "";
+        goodList = [];
+        // 获取用户当前订单地址信息
+        doc.addressList.forEach((item)=>{
+          if (item.addressId == addressId) {
+            address = item;
+          }
+        })
+
+        // 获取用户当前订单商品信息
+        doc.cartList.filter((item)=>{
+          if (item.checked) {
+            goodList.push(item);
+          }
+        })
+
+        // 生成订单号
+        let [platform,r1,r2,sysDate,orderDate] = [
+          "626",
+          Math.floor(Math.random()*10),
+          Math.floor(Math.random()*10),
+          new Date().Format("yyyyMMddhhmmss"),
+          new Date().Format("yyyy-MM-dd hh:mm:ss"),
+        ];
+        let orderId = platform + r1 + sysDate + r2;
+
+        // 创建订单
+        let order = {
+          orderId:orderId,
+          orderPrice:totalPay,
+          addressInfo:address,
+          goodList:goodList,
+          orderStatus:"1",
+          orderDate:orderDate
+        }
+
+        // 保存订单
+        doc.orderList.push(order);
+        doc.save(function (err1,doc1) {
+          if (err1) {
+            res.json({
+              status:"1",
+              msg:err.message,
+              result:""
+            })
+          } else {
+            res.json({
+              status:"0",
+              msg:"",
+              result:{
+                orderId:order.orderId,
+                orderPrice:totalPay
+              }
+            })
+          }
+        })
+      } else {
+        res.json({
+          status:"1001",
+          msg:"no result",
+          result:""
+        })
       }
     }
   })

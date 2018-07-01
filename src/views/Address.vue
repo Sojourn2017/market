@@ -3,11 +3,6 @@
   <!-- 网页头部 -->
   <nav-header  v-on:overLoad="init"></nav-header>
 
-  <!-- 网页面包屑 -->
-  <nav-bread>
-    <span slot="bread">地址</span>
-  </nav-bread>
-
   <!-- svg图标库 -->
   <svg-model></svg-model>
 
