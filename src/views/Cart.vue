@@ -187,8 +187,6 @@ export default {
         let res = response.data;
         if (res.status == "0") {
           this.cartList = res.result;
-        } else {
-          this.cartList = [];
         }
       })
     },

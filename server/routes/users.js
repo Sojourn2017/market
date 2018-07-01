@@ -269,7 +269,6 @@ router.post("/setDefault", function(req,res,next) {
 // 删除指定地址
 router.post("/addressDel",function (req,res,next) {
   let [userId, addressDelId] = [req.cookies.userId, req.body.addressId];
-  console.log()
   User.update({
     userId:userId
   },{
@@ -294,5 +293,40 @@ router.post("/addressDel",function (req,res,next) {
     }
   });
 });
+
+// 获取订单列表
+router.get("/orderList",function(req,res,netx) {
+  let userId = req.cookies.userId;
+  User.findOne({userId:userId},function(err,doc) {
+    if (err) {
+      res.json({
+        status:"1",
+        msg:err.message,
+        result:""
+      })
+    } else {
+      if (doc && doc.cartList.length) {
+        let cartList = doc.cartList;
+        let orderList = [];
+        for (let item of cartList) {
+          if (item.checked) {
+            orderList.push(item);
+          }
+        } 
+        res.json({
+          status:"0",
+          msg:"",
+          result:orderList
+        })
+      } else {
+        res.json({
+          status:"1001",
+          msg:"no cartList",
+          result:"",
+        });
+      }
+    }
+  })
+})
 
 module.exports = router;

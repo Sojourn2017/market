@@ -18,7 +18,7 @@
         <div class="page-title-normal">
           <h2 class="page-title-h2"><span>结算</span></h2>
         </div>
-        <!-- process step -->
+        <!-- 购物流程 -->
         <div class="check-step">
           <ul>
             <li class="cur"><span>确认</span> 地址</li>
@@ -28,7 +28,7 @@
           </ul>
         </div>
 
-        <!-- address list -->
+        <!-- 地址列表 -->
         <div class="page-title-normal checkout-title">
           <h2><span>收货地址</span></h2>
         </div>
@@ -78,7 +78,7 @@
           </div>
         </div>
 
-        <!-- shipping method-->
+        <!-- 配送方式-->
         <div class="page-title-normal checkout-title">
           <h2><span>配送方式</span></h2>
         </div>
