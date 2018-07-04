@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 let User = require("./../models/user");
+import {res_err} from "./../util/resOutput";
 require("./../util/util");
 
 /* GET users listing. */
@@ -18,7 +19,8 @@ router.post('/login',function (req,res,next) {
     if (err) {
       res.json({
         status: "1",
-        msg: err.message
+        msg: err.message,
+        result:""
       })
     } else {
       if (doc) {
@@ -75,11 +77,7 @@ router.get('/checkLogin',function (req,res,next) {
       result:req.cookies.userName
     })
   } else {
-    res.json({
-      status:"1",
-      msg:"未登录",
-      result:""
-    })
+    res_err(res,"未登录")
   }
 });
 
@@ -330,7 +328,7 @@ router.get("/orderList",function(req,res,next) {
   })
 })
 
-// 订单完成页面
+// 生成订单
 router.post("/payMent",function(req,res,next) {
   let [userId,addressId,totalPay] = [req.cookies.userId,req.body.addressId,req.body.totalPay];
   User.findOne({userId:userId},function(err,doc) {
@@ -349,7 +347,17 @@ router.post("/payMent",function(req,res,next) {
           if (item.addressId == addressId) {
             address = item;
           }
-        })
+        });
+
+        // 地址检测
+        if (!address) {
+          res.json({
+            status:"1001",
+            msg:"地址错误",
+            result:""
+          })
+          return;
+        }
 
         // 获取用户当前订单商品信息
         doc.cartList.filter((item)=>{
@@ -370,11 +378,11 @@ router.post("/payMent",function(req,res,next) {
 
         // 创建订单
         let order = {
-          orderId:orderId,
-          orderPrice:totalPay,
-          addressInfo:address,
-          goodList:goodList,
-          orderStatus:"1",
+          orderId: orderId,
+          orderPrice: totalPay,
+          addressInfo: address,
+          goodList: goodList,
+          orderStatus: 1,
           orderDate:orderDate
         }
 
@@ -409,4 +417,52 @@ router.post("/payMent",function(req,res,next) {
   })
 })
 
+// 查询订单
+router.get("/orderDetail",function(req,res,next) {
+  let [userId,orderId] = [req.cookies.userId,req.query.orderId];
+  User.findOne({
+    userId:userId
+  },function (err,userInfo) {
+    if (err) {
+      res.json({
+        status:"1",
+        msg:err.message,
+        result:""
+      })
+    } else {
+      if (userInfo) {
+        let orderList = userInfo.orderList;
+        let order;
+        orderList.forEach((item) => {
+          if (item.orderId == orderId) {
+            order = item;
+          }
+        });
+        if (!order) {
+          res.json({
+            status:"1001",
+            msg:"无此订单",
+            result:""
+          })
+          return;
+        }
+        res.json({
+            status:"0",
+            msg:"",
+            result:{
+              orderId:order.orderId,
+              orderPrice:order.orderPrice
+            }
+        })
+      } else {
+        res.json({
+          status:"1001",
+          msg:"找不到此用户",
+          result:""
+        })
+      }
+      
+    }
+  })
+})
 module.exports = router;

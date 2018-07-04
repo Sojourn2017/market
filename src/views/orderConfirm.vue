@@ -133,6 +133,7 @@ export default {
       orderDiscount:0,    // 折扣
       totalPrice:0,   // 商品总金额
       totalPay:0,    // 实际支付金额
+      addressId:"",    // 订单地址ID
     } ; 
   },
 
@@ -170,9 +171,9 @@ export default {
 
     // 提交订单
     submitOrder() {
-      let addressId = this.$route.query.addressId;
+      this.addressId = this.$route.query.addressId;
       axios.post("/users/payMent",{
-        addressId:addressId,
+        addressId:this.addressId,
         totalPay:this.totalPay
       }).then((response) => {
         let res = response.data;
@@ -180,7 +181,7 @@ export default {
           this.$router.push({
           path:'/orderSuccess',
           query:{
-            address:res.result.orderId
+            orderId:res.result.orderId
           }
         })
         }

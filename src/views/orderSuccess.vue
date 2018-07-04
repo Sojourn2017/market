@@ -18,12 +18,12 @@
       </div>
 
       <div class="order-create">
-        <div class="order-create-pic"><img src="../../static/img/ok-2.png" alt=""></div>
+        <div class="order-create-pic"><img v-bind:src="`static/img/${resultImg}`" alt=""></div>
         <div class="order-create-main">
-          <h3>下单成功!</h3>
+          <h3>{{resultMsg}}</h3>
           <p>
-            <span>订单号：100000001</span>
-            <span>付款金额：1000</span>
+            <span>订单号：{{orderId}}</span>
+            <span>付款金额：{{orderPrice}}</span>
           </p>
           <div class="order-create-btn-wrap">
             <div class="btn-l-wrap">
@@ -52,6 +52,10 @@ import axios from 'axios'
 export default {
   data () {
     return {
+      resultImg:"",   // 订单结果图片    
+      resultMsg:"",    // 订单结果信息
+      orderId:"",   // 订单ID
+      orderPrice:0    // 订单金额
     } ; 
   },
 
@@ -61,6 +65,29 @@ export default {
     NavBread,
     Modal,
     SvgModel
+  },
+
+  mounted() {
+    let orderId = this.$route.query.orderId;
+    if (!orderId) {
+      return;
+    }
+    axios.get("/users/orderDetail",{
+      params:{
+        orderId:orderId,
+      }
+    }).then((response) => {
+      let res = response.data;
+      if (res.status == "0") {
+        this.resultImg = "ok-2.png";
+        this.resultMsg = "下单成功!";
+        this.orderId = res.result.orderId;
+        this.orderPrice = res.result.orderPrice;
+      } else {
+        this.resultImg = "error-1.png";
+        this.resultMsg = "下单错误!";
+      }
+    })
   }
 }
 

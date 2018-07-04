@@ -256,7 +256,7 @@ export default {
         this.$router.push({
           path:'/orderConfirm',
           query:{
-            address:this.selectAddressId
+            addressId:this.selectAddressId
           }
         })
       }
