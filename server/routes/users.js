@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 let User = require("./../models/user");
-import {res_err} from "./../util/resOutput";
+let res_Interf =  require("./../util/resInterface");
 require("./../util/util");
 
 /* GET users listing. */
@@ -17,11 +17,7 @@ router.post('/login',function (req,res,next) {
   };
   User.findOne(params,function (err, doc) {
     if (err) {
-      res.json({
-        status: "1",
-        msg: err.message,
-        result:""
-      })
+      res_Interf.send(res,"1",err.message);
     } else {
       if (doc) {
         res.cookie('userId',doc.userId,{
@@ -32,14 +28,9 @@ router.post('/login',function (req,res,next) {
           path:'/',
           maxAge:1000*60*30
         });
-        
-        res.json({
-          status: "0",
-          msg:"",
-          result:{
-            userName: doc.userName
-          }
-        })
+        res_Interf.send(res,"0","",{
+          userName: doc.userName
+        });
       } else {
         res.json({
           status: "1001",
@@ -71,13 +62,9 @@ router.post('/logout',function (req,res,next) {
 // 检测用户是否登录
 router.get('/checkLogin',function (req,res,next) {
   if (req.cookies.userId) {
-    res.json({
-      status:"0",
-      msg:"",
-      result:req.cookies.userName
-    })
+    res_Interf.send(res,"0","",req.cookies.userName);
   } else {
-    res_err(res,"未登录")
+    res_Interf.send(res,"1","请先登录");
   }
 });
 
@@ -86,11 +73,7 @@ router.get("/cartList",function (req,res,next) {
   let userId = req.cookies.userId;
   User.findOne ({userId:userId},function (err,doc) {
     if (err) {
-      res.json ({
-        status:"1",
-        msg:err.message,
-        result:""
-      })
+      res_Interf.send(res,"1",err.message);
     } else {
       if (doc) {
         res.json ({
@@ -123,11 +106,7 @@ router.post("/productDel",function (req,res,next) {
     }
   },function (err,doc) {
     if (err) {
-      res.json ({
-        status:"1",
-        msg:err.message,
-        result:""
-      })
+      res_Interf.send(res,"1",err.message);
     } else {
       res.json ({
         status:"0",
@@ -150,11 +129,7 @@ router.post("/editCart",function (req, res, next) {
     "cartList.$.checked": checked 
   },function (err, doc) {
     if (err) {
-      res.json ({
-        status:"1",
-        msg:err.message,
-        result:""
-      })
+      res_Interf.send(res,"1",err.message);
     } else {
       res.json ({
         status:"0",
@@ -176,11 +151,7 @@ router.post("/selectAll", function (req, res, next) {
     }
   },function(err,doc) {
     if (err) {
-      res.json ({
-        status:"1",
-        msg:err.message,
-        result:""
-      })
+      res_Interf.send(res,"1",err.message);
     } else {
       res.json ({
         status:"0",
@@ -196,11 +167,7 @@ router.get("/addressList",function(req,res,next) {
   let userId = req.cookies.userId;
   User.findOne({userId:userId},function(err,doc) {
     if (err) {
-      res.json({
-        status:'1',
-        msg:err.message,
-        result:""
-      })
+      res_Interf.send(res,"1",err.message);
     } else {
       if (doc.addressList.length > 0) {
         res.json({
@@ -231,11 +198,7 @@ router.post("/setDefault", function(req,res,next) {
   } else {
     User.findOne({userId:userId},function (err,doc) {
       if (err) {
-        res.json({
-          status:'1',
-          msg:err.message,
-          result:""
-        })
+        res_Interf.send(res,"1",err.message);
       } else {
         let addressList = doc.addressList;
         addressList.forEach((item) => {
@@ -247,11 +210,7 @@ router.post("/setDefault", function(req,res,next) {
         });
         doc.save(function(err,doc) {
           if (err) {
-            res.json({
-              status:'1',
-              msg:err.message,
-              result:""
-            });
+            res_Interf.send(res,"1",err.message);
           } else {
             res.json({
               status:"0",
@@ -278,11 +237,7 @@ router.post("/addressDel",function (req,res,next) {
     }
   },function (err,doc) {
     if (err) {
-      res.json ({
-        status:"1",
-        msg:err.message,
-        result:""
-      })
+      res_Interf.send(res,"1",err.message);
     } else {
       res.json ({
         status:"0",
@@ -298,11 +253,7 @@ router.get("/orderList",function(req,res,next) {
   let userId = req.cookies.userId;
   User.findOne({userId:userId},function(err,doc) {
     if (err) {
-      res.json({
-        status:"1",
-        msg:err.message,
-        result:""
-      })
+      res_Interf.send(res,"1",err.message);
     } else {
       if (doc && doc.cartList.length) {
         let cartList = doc.cartList;
@@ -333,11 +284,7 @@ router.post("/payMent",function(req,res,next) {
   let [userId,addressId,totalPay] = [req.cookies.userId,req.body.addressId,req.body.totalPay];
   User.findOne({userId:userId},function(err,doc) {
     if (err) {
-      res.json({
-        status:"1",
-        msg:err.message,
-        result:""
-      })
+      res_Interf.send(res,"1",err.message);
     } else {
       if(doc) {
         let address = "";
@@ -390,11 +337,7 @@ router.post("/payMent",function(req,res,next) {
         doc.orderList.push(order);
         doc.save(function (err1,doc1) {
           if (err1) {
-            res.json({
-              status:"1",
-              msg:err.message,
-              result:""
-            })
+            res_Interf.send(res,"1",err.message);
           } else {
             res.json({
               status:"0",
@@ -424,11 +367,7 @@ router.get("/orderDetail",function(req,res,next) {
     userId:userId
   },function (err,userInfo) {
     if (err) {
-      res.json({
-        status:"1",
-        msg:err.message,
-        result:""
-      })
+      res_Interf.send(res,"1",err.message);
     } else {
       if (userInfo) {
         let orderList = userInfo.orderList;

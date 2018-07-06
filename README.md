@@ -23,4 +23,17 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 ## 效果图
 
-![](./resource/markdown1.png '初步效果图')
+购物车首页：
+![](./resource/markdown1.png '首页')
+
+购物车页面:
+![](./resource/cart.png '首页')
+
+地址选择页面:
+![](./resource/address.png '首页')
+
+订单确认页面:
+![](./resource/confirm.png '首页')
+
+订单完成页面:
+![](./resource/success.png '首页')

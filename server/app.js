@@ -7,6 +7,7 @@ var ejs = require('ejs');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var goodsRouter = require('./routes/goods');
+var res_Interf = require('./util/resInterface');
 
 var app = express();
 app.engine('.html',ejs.__express);
@@ -29,11 +30,7 @@ app.use(function (req,res,next) {
     if (req.originalUrl=='/users/login' || req.originalUrl=='/users/logout' || req.originalUrl.indexOf('goods/list')>-1) {
       next();
     } else {
-      res.json({
-        status:"1001",
-        msg:"请先登录",
-        result:''
-      })
+      res_Interf.send(res,1,"请先登录");
     }
   } 
 })
