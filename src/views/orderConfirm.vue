@@ -114,10 +114,6 @@
 </style>
 
 <script>
-import './../assets/css/base.css'
-import './../assets/css/product.css'
-import './../assets/css/checkout.css'
-import './../assets/css/login.css';
 import NavHeader from './../components/Navheader.vue'
 import NavFooter from './../components/NavFooter.vue'
 import NavBread from './../components/NavBread.vue'

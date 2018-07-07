@@ -108,10 +108,6 @@
 </template>
 
 <script>
-import "./../assets/css/base.css";
-import "./../assets/css/product.css";
-import "./../assets/css/supply.css";
-import "./../assets/css/login.css";
 import NavHeader from "./../components/Navheader.vue";
 import NavFooter from "./../components/NavFooter.vue";
 import NavBread from "./../components/NavBread.vue";
@@ -254,6 +250,7 @@ export default {
           let res = response.data;
           if (res.status == "0") {
             this.mdShowCart = true;
+            this.$store.commit("updateCartCount",this.$store.state.cartCount + 1);
           } else {
             this.mdShowLogin = true;
           }

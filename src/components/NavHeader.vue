@@ -1,6 +1,13 @@
 <template>
   <header class="header">
         <div class="navbar">
+          <symbol id="icon-cart" viewBox="0 0 38 32">
+            <title>cart</title>
+            <path class="path1" d="M37.759 0h-4.133c-0.733 0.004-1.337 0.549-1.434 1.255l-0.546 4.342c-0.081 0.484-0.496 0.849-0.997 0.849-0.005 0-0.009-0-0.014-0h-27.604c-0.003 0-0.007-0-0.011-0-1.674 0-3.031 1.357-3.031 3.031 0 0.34 0.056 0.666 0.159 0.971l2.52 8.062c0.385 1.194 1.486 2.043 2.785 2.043 0.126 0 0.25-0.008 0.372-0.023l22.983 0.002c0.515 0.131 0.626 0.768 0.626 1.283 0.005 0.044 0.009 0.095 0.009 0.146 0 0.501-0.294 0.933-0.718 1.134l-22.439 0.003c-0.354 0-0.642 0.287-0.642 0.642s0.287 0.642 0.642 0.642h22.745l0.131-0.071c0.919-0.392 1.551-1.287 1.551-2.33 0-0.058-0.002-0.116-0.006-0.173 0.021-0.108 0.033-0.24 0.033-0.376 0-1.072-0.732-1.973-1.724-2.23l-23.357-0.004c-0.063 0.008-0.135 0.013-0.209 0.013-0.719 0-1.332-0.455-1.566-1.093l-2.53-8.095c-0.048-0.154-0.076-0.332-0.076-0.515 0-0.973 0.782-1.764 1.752-1.778h27.657c1.159-0.004 2.112-0.883 2.232-2.011l0.547-4.345c0.010-0.083 0.078-0.147 0.161-0.152l4.133-0c0.354 0 0.642-0.287 0.642-0.642s-0.287-0.642-0.642-0.642z"></path>
+            <path class="path2" d="M31.323 9.69c-0.022-0.003-0.048-0.004-0.074-0.004-0.328 0-0.598 0.248-0.633 0.567l-0.809 7.268c-0.003 0.022-0.004 0.048-0.004 0.074 0 0.328 0.248 0.598 0.567 0.633l0.074 0c0.001 0 0.003 0 0.004 0 0.327 0 0.596-0.246 0.632-0.563l0.809-7.268c0.003-0.022 0.004-0.048 0.004-0.074 0-0.328-0.248-0.598-0.567-0.633z"></path>
+            <path class="path3" d="M27.514 25.594c-1.769 0-3.203 1.434-3.203 3.203s1.434 3.203 3.203 3.203c1.769 0 3.203-1.434 3.203-3.203s-1.434-3.203-3.203-3.203zM27.514 30.717c-1.060 0-1.92-0.86-1.92-1.92s0.86-1.92 1.92-1.92c1.060 0 1.92 0.86 1.92 1.92s-0.86 1.92-1.92 1.92z"></path>
+            <path class="path4" d="M9.599 25.594c-1.769 0-3.203 1.434-3.203 3.203s1.434 3.203 3.203 3.203c1.769 0 3.203-1.434 3.203-3.203s-1.434-3.203-3.203-3.203zM9.599 30.717c-1.060 0-1.92-0.86-1.92-1.92s0.86-1.92 1.92-1.92c1.060 0 1.92 0.86 1.92 1.92s-0.86 1.92-1.92 1.92z"></path>
+          </symbol>
           <symbol id="icon-status-ok" viewBox="0 0 32 32">
             <title>status-ok</title>
             <path class="path1" d="M22.361 10.903l-9.71 9.063-2.998-2.998c-0.208-0.209-0.546-0.209-0.754 0s-0.208 0.546 0 0.754l3.363 3.363c0.104 0.104 0.241 0.156 0.377 0.156 0.131 0 0.261-0.048 0.364-0.143l10.087-9.414c0.215-0.201 0.227-0.539 0.026-0.754s-0.539-0.226-0.754-0.026z"></path>
@@ -18,10 +25,12 @@
               <span class="navbar-link font-red" v-if="nickName" v-text="nickName"></span>
               <a href="javascript:void(0)" class="navbar-link" @click="loginModalFlag=true" v-if="!nickName">登录</a>
               <a href="javascript:void(0)" class="navbar-link" v-if="nickName" v-on:click="logOut">注销</a>
-              <div class="navbar-cart-container ">
-                <span class="navbar-cart-count"></span>
+              <div class="navbar-cart-container">
+                <span class="navbar-cart-count" v-if="cartCount>0">{{cartCount}}</span>
                 <a class="navbar-link navbar-cart-link" href="/#/cart">
-                  <svg baseProfile="tiny" height="20px" version="1.2" viewBox="0 0 19 19" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="Layer_1"><g><path d="M20.756,5.345C20.565,5.126,20.29,5,20,5H6.181L5.986,3.836C5.906,3.354,5.489,3,5,3H2.75c-0.553,0-1,0.447-1,1    s0.447,1,1,1h1.403l1.86,11.164c0.008,0.045,0.031,0.082,0.045,0.124c0.016,0.053,0.029,0.103,0.054,0.151    c0.032,0.066,0.075,0.122,0.12,0.179c0.031,0.039,0.059,0.078,0.095,0.112c0.058,0.054,0.125,0.092,0.193,0.13    c0.038,0.021,0.071,0.049,0.112,0.065C6.748,16.972,6.87,17,6.999,17C7,17,18,17,18,17c0.553,0,1-0.447,1-1s-0.447-1-1-1H7.847    l-0.166-1H19c0.498,0,0.92-0.366,0.99-0.858l1-7C21.031,5.854,20.945,5.563,20.756,5.345z M18.847,7l-0.285,2H15V7H18.847z M14,7    v2h-3V7H14z M14,10v2h-3v-2H14z M10,7v2H7C6.947,9,6.899,9.015,6.852,9.03L6.514,7H10z M7.014,10H10v2H7.347L7.014,10z M15,12v-2    h3.418l-0.285,2H15z"/><circle cx="8.5" cy="19.5" r="1.5"/><circle cx="17.5" cy="19.5" r="1.5"/></g></g></svg>
+                  <svg class="navbar-cart-logo">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
+                  </svg>
                 </a>
               </div>
             </div>
@@ -62,7 +71,6 @@
 </template>
 
 <script>
-  import './../assets/css/login.css';
   import axios from 'axios'
   import { mapState } from 'vuex'
   export default{
@@ -72,18 +80,17 @@
             userPwd:'',
             errorTip:false,
             loginModalFlag:false,
-            nickName:'',
           }
       },
-      computed:{
-        // ...mapState(['nickName','cartCount'])
+      computed: {
+        ...mapState(['nickName','cartCount']),
+        // nickName(){   // 获取用户名
+        //   return this.$store.state.nickName;
+        // },
+        // cartCount(){    // 获取购物车商品数量
+        //  return this.$store.state.cartCount;
+        // }
       },
-      /*nickName(){
-        return this.$store.state.nickName;
-      },
-      cartCount(){
-        return this.$store.state.cartCount;
-      }*/
       mounted(){
           this.checkLogin();
       },
@@ -93,13 +100,14 @@
                   var res = response.data;
                   // var path = this.$route.pathname;
                   if(res.status=="0"){
-                    this.nickName = res.result;
-                    // this.$store.commit("updateUserInfo",res.result);
+                    // this.nickName = res.result;
+                    this.$store.commit("updateUserInfo",res.result);
                     this.loginModalFlag = false;
+                    this.getCartCount();
                   }else{
-                    // if(this.$route.path!="/goods"){
-                    //   this.$router.push("/goods");
-                    // }
+                    if(this.$route.path!="/goods"){
+                      this.$router.push("/goods");
+                    }
                   }
               });
           },
@@ -117,9 +125,9 @@
                     this.overLoad();
                     this.errorTip = false;
                     this.loginModalFlag = false;
-                    this.nickName = res.result.userName;
-                    // this.$store.commit("updateUserInfo",res.result.userName);
-                    // this.getCartCount();
+                    // this.nickName = res.result.userName;
+                    this.$store.commit("updateUserInfo",res.result.userName);
+                    this.getCartCount();
                   }else{
                     this.errorTip = true;
                   }
@@ -130,19 +138,21 @@
                   let res = response.data;
                   if (res.status=="0") {
                       this.overLoad();
-                      this.nickName = '';
-                      // this.$store.commit("updateUserInfo",res.result.userName);
+                      this.$store.commit("updateUserInfo","");
+                      this.$store.commit("updateCartCount",0);
                   }
               })
           },
           getCartCount(){
-            axios.get("users/getCartCount").then((response) => {
-              var res = res.data;
-              // this.$store.commit("updateCartCount",res.result);
+            axios.get("/users/getCartCount").then((response) => {
+              let res = response.data;
+              if (res.status=="0") {
+                this.$store.commit("updateCartCount",res.result);
+              }
             });
           },
           overLoad() {
-            this.$emit('overLoad')
+            this.$emit('overLoad');
           }
       }
   }

@@ -126,10 +126,6 @@
 </template>
 
 <script>
-import './../assets/css/base.css'
-import './../assets/css/product.css'
-import './../assets/css/checkout.css'
-import './../assets/css/login.css';
 import NavHeader from './../components/Navheader.vue'
 import NavFooter from './../components/NavFooter.vue'
 import NavBread from './../components/NavBread.vue'
@@ -216,6 +212,7 @@ export default {
       let cartList = this.cartList;
       for (let item in cartList) {
         if (cartList[item].productId == productId) {
+          this.$store.commit("updateCartCount",this.$store.state.cartCount - cartList[item].productNum);
           cartList.splice(item,1);
           return;
         }
@@ -235,10 +232,12 @@ export default {
             return;
           }
           item.productNum--;
+          this.$store.commit("updateCartCount",this.$store.state.cartCount - 1);
           break;
         
         case "add":
           item.productNum++;
+          this.$store.commit("updateCartCount",this.$store.state.cartCount + 1);
           break;
 
         case "checked":
@@ -253,6 +252,9 @@ export default {
       }).then((response) => {
           let res = response.data;
           // 响应处理
+          if (res.status !== "0") {
+            this.init();
+          }
       })
     },
 

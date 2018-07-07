@@ -162,6 +162,25 @@ router.post("/selectAll", function (req, res, next) {
   })
 });
 
+// 查询购物车数量
+router.get("/getCartCount",function (req, res, next) {
+  if (req.cookies && req.cookies.userId) {
+    let userId = req.cookies.userId;
+    User.findOne({userId:userId},function(err,doc) {
+      if (err) {
+        res_Interf.send(res,"1",err.message);
+      } else {
+        let cartList = doc.cartList;
+        let cartCount = 0;
+        cartList.map(function (item) {
+          cartCount += parseInt(item.productNum);
+        });
+        res_Interf.send(res,"0","",cartCount);
+      }
+    })
+  }
+})
+
 // 获取收货地址
 router.get("/addressList",function(req,res,next) {
   let userId = req.cookies.userId;

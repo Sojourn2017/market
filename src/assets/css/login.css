@@ -44,22 +44,27 @@ a {
 }
 .navbar-cart-container {
   position: relative;
+  margin-left: 15px;
 }
 .navbar-cart-count {
+  display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
   top: -9px;
   right: -11px;
   width: 20px;
+  height: 20px;
   border-radius: 10px;
   color: white;
-  background-color: #eb767d;
-  font-size: 16px;
+  background-color: #d1434a;
+  font-size: 12px;
   font-weight: bold;
   text-align: center;
 }
 .navbar-cart-logo {
+  position: absolute;
+  left: 0;
   width: 25px;
   height: 25px;
   transform: scaleX(-1);
